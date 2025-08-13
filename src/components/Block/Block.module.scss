@@ -1,0 +1,58 @@
+.block {
+  width: 345px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  box-shadow: 0 1px 8px 0 #0000001A;
+
+  &__content {
+    display: block;
+  }
+
+  &.singleLine {
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+
+  &.multiLine {
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+
+}
+
+.imageContainer {
+  width: 60px;
+  height: 60px;
+  overflow: hidden;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.options {
+  position: absolute;
+  right: 13px;
+  top: 0;
+  height: 26px;
+  width: 28px;
+  //background: #8585854D;
+  backdrop-filter: blur(4.400000095367432px);
+  border: none;
+  border-radius: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}

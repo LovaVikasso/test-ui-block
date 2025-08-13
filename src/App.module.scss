@@ -1,0 +1,19 @@
+.container {
+  margin: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.control {
+  display: flex;
+  gap: 12px;
+  max-width: 345px;
+  align-items: end;
+}
