@@ -5,7 +5,6 @@
 
 /* ---- CSS Variables (for later) ---- */
 :root {
-
 }
 
 /* ---- Box sizing + base ---- */
@@ -17,7 +16,15 @@
 html {
   -webkit-text-size-adjust: 100%; /* iOS zoom on orientation */
   text-size-adjust: 100%;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  font-family:
+    system-ui,
+    -apple-system,
+    Segoe UI,
+    Roboto,
+    Helvetica,
+    Arial,
+    "Apple Color Emoji",
+    "Segoe UI Emoji";
   line-height: 1.5;
   color-scheme: light dark; /* respect user scheme */
 }
@@ -37,12 +44,31 @@ body {
 }
 
 /* ---- Typography defaults ---- */
-h1,h2,h3,h4,h5,h6,
-p,figure,blockquote,dl,dd {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl,
+dd {
   margin: 0;
 }
-p + p { margin-top: 1em; }
-h1,h2,h3,h4,h5,h6 { font-weight: 600; line-height: 1.2; }
+p + p {
+  margin-top: 1em;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+  line-height: 1.2;
+}
 
 /* ---- Links ---- */
 a {
@@ -50,25 +76,50 @@ a {
   text-decoration: none;
   background-color: transparent;
 }
-a:hover { text-decoration: underline; }
-a:focus { outline: none; }
+a:hover {
+  text-decoration: underline;
+}
+a:focus {
+  outline: none;
+}
 
 /* ---- Lists ---- */
-ul[role="list"], ol[role="list"] { list-style: none; }
-ul, ol { padding-left: 1.25rem; margin: 0; }
-menu, ul, ol { list-style: none; padding: 0; }
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+}
+ul,
+ol {
+  padding-left: 1.25rem;
+  margin: 0;
+}
+menu,
+ul,
+ol {
+  list-style: none;
+  padding: 0;
+}
 
 /* ---- Images / Media ---- */
-img, svg, video, canvas, audio, iframe, embed, object {
+img,
+svg,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object {
   display: block;
   max-width: 100%;
 }
-img, picture { height: auto; }
+img,
+picture {
+  height: auto;
+}
 svg {
   overflow: visible; /* FF/Safari clipping fix */
   vertical-align: middle;
 }
-
 
 button {
   background: none;

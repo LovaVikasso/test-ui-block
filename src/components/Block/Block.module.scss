@@ -4,38 +4,70 @@
   padding-right: 16px;
   border-radius: 25px;
   display: flex;
-  align-items: center;
   gap: 8px;
   position: relative;
-  box-shadow: 0 1px 8px 0 #0000001A;
-
-  &__content {
-    display: block;
-  }
+  box-shadow: 0 1px 8px 0 #0000001a;
 
   &.singleLine {
+    --padY: 24px;
     padding-top: 24px;
     padding-bottom: 24px;
   }
-
   &.multiLine {
+    --padY: 16px;
     padding-top: 16px;
     padding-bottom: 16px;
   }
 
+  &.alignMiddle {
+    align-items: center;
+  }
+  &.alignTop {
+    align-items: flex-start;
+  }
+
+  .Indicator {
+    position: absolute;
+    right: 16px;
+    inset-block-end: var(--padY, 16px);
+  }
+}
+
+.block__content {
+  flex: 1;
+  min-width: 0;
+
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  hyphens: auto;
+
+  &::after {
+    content: "";
+    display: inline-block;
+    inline-size: var(--indicatorReserve, 0px);
+    block-size: 1lh;
+    height: 0;
+  }
+}
+
+.block.shiftIndicator .Indicator {
+  transform: translateY(1.2em);
 }
 
 .imageContainer {
   width: 60px;
-  height: 60px;
+  flex: 0 1 60px;
+  min-width: 0;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
   border-radius: 13px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-
 .image {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -47,8 +79,7 @@
   top: 0;
   height: 26px;
   width: 28px;
-  //background: #8585854D;
-  backdrop-filter: blur(4.400000095367432px);
+  //backdrop-filter: blur(4.4px);
   border: none;
   border-radius: 14px;
   display: flex;

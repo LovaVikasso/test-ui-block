@@ -1,1 +1,1 @@
-export type BlockVariant = "text" | "image"
+export type BlockVariant = "text" | "image";

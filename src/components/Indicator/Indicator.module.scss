@@ -14,13 +14,13 @@
 
   font-size: 12px;
   font-weight: 500;
-  color: #B4B4B4;
-  border: 0.5px solid #B4B4B4;
+  color: #b4b4b4;
+  border: 0.5px solid #b4b4b4;
 
   &.active {
-    background: linear-gradient(239.93deg, #3FCCFF -26.89%, #068DFB 70.78%);
-    box-shadow: 0 1px 5.3px 0 #149DFF36;
-    color: #FFFFFF;
+    background: linear-gradient(239.93deg, #3fccff -26.89%, #068dfb 70.78%);
+    box-shadow: 0 1px 5.3px 0 #149dff36;
+    color: #ffffff;
     border: none;
   }
 }

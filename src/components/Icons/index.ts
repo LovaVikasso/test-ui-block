@@ -1,1 +1,1 @@
-export * from './IconOptions.tsx'
+export * from "./IconOptions.tsx";
