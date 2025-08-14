@@ -32,13 +32,16 @@ export const Block = ({
   const contentRef = ref;
   const [edit, setEdit] = useState(false);
   const [originalText, setOriginalText] = useState(text);
+  const [originalVariant, setOriginalVariant] = useState(variant);
   const [currentText, setCurrentText] = useState(text);
+  const [currentVariant, setCurrentVariant] = useState(variant);
   const [hasChanges, setHasChanges] = useState(false);
 
-  // Синхронизируем currentText при изменении text извне
+  // Синхронизируем currentText и currentVariant при изменении извне
   useEffect(() => {
     setCurrentText(text);
-  }, [text]);
+    setCurrentVariant(variant);
+  }, [text, variant]);
 
   const toggleEdit = () => {
     if (edit) {
@@ -52,18 +55,22 @@ export const Block = ({
           } as React.ChangeEvent<HTMLTextAreaElement>;
           onTextChange(syntheticEvent);
         }
+        onVariantChange(currentVariant);
       }
       setHasChanges(false);
     } else {
       // Вход в режим редактирования
       setOriginalText(text);
+      setOriginalVariant(variant);
       setCurrentText(text);
+      setCurrentVariant(variant);
     }
     setEdit(!edit);
   };
 
   const handleCancelEdit = () => {
     setCurrentText(originalText);
+    setCurrentVariant(originalVariant);
     setHasChanges(false);
     setEdit(false);
   };
@@ -72,7 +79,16 @@ export const Block = ({
     const target = e.target as HTMLDivElement;
     const newText = target.textContent || "";
     setCurrentText(newText);
-    setHasChanges(newText !== originalText);
+    setHasChanges(
+      newText !== originalText || currentVariant !== originalVariant
+    );
+  };
+
+  const handleVariantChange = (newVariant: BlockVariant) => {
+    setCurrentVariant(newVariant);
+    setHasChanges(
+      currentText !== originalText || newVariant !== originalVariant
+    );
   };
 
   const indicatorReserve = useMemo(() => {
@@ -140,10 +156,10 @@ export const Block = ({
         />
       ) : (
         <BlockEdit
-          variant={variant}
+          variant={currentVariant}
           text={currentText}
           hasChanges={hasChanges}
-          onVariantChange={onVariantChange}
+          onVariantChange={handleVariantChange}
           onTextChange={handleContentChange}
           onToggleEdit={toggleEdit}
           onCancelEdit={handleCancelEdit}

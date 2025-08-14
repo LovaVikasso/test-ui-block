@@ -370,12 +370,9 @@
     border-radius: 25px 25px 0 0;
   }
   .textArea {
-    padding: 0 0 0 14px;
     flex: 1;
     border-radius: 0;
-    margin-right: 16px;
     min-height: 28px;
-    // Отступы применяются динамически через inline стили
 
     textarea {
       padding: 0;
