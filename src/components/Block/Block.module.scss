@@ -181,7 +181,7 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding: 17px 15px 6px 21px;
+  padding: 17px 15px 15px 21px;
 }
 
 .contentControl {
@@ -281,17 +281,20 @@
   flex: 1;
   min-width: 0;
   width: 100%;
-  font-size: 14px;
-  font-family: inherit;
   border: none;
   outline: none;
-  line-height: 1.4;
   white-space: normal;
   overflow-wrap: anywhere;
   word-break: break-word;
   min-height: 16px;
   padding: 0;
   background: transparent;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 140%;
+  letter-spacing:0;
+  vertical-align: middle;
+  color: #4B4B4B;
 
   &::selection {
     background: #2bd1ff;
