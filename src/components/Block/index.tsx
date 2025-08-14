@@ -24,7 +24,9 @@ export const Block = ({
 }: Props) => {
   const { ref, lines } = useLineCount(text);
   const contentRef = ref;
-
+  const [edit, setEdit] = useState(false);
+  console.log(edit, "edit");
+  const toggleEdit = () => setEdit(!edit);
   const indicatorReserve = useMemo(() => {
     if (!count) return 0;
     const digits = String(Math.abs(count)).length;
@@ -75,18 +77,34 @@ export const Block = ({
   const effectiveLines = lines + (lines === 1 && needsBump ? 1 : 0);
   const padClass = effectiveLines === 1 ? s.singleLine : s.multiLine;
 
+  const isImageLeft = variant === "image-left";
   const alignClass =
-    variant === "image" && effectiveLines <= 2 ? s.alignMiddle : s.alignTop;
+    isImageLeft && effectiveLines <= 2 ? s.alignMiddle : s.alignTop;
+
+  let variantClass = "";
+  switch (variant) {
+    case "image-left":
+      variantClass = s.imageLeft;
+      break;
+    case "image-top":
+      variantClass = s.imageTop;
+      break;
+    case "image-bottom":
+      variantClass = s.imageBottom;
+      break;
+    default:
+      variantClass = "";
+  }
 
   return (
     <div
-      className={`${s.block} ${padClass} ${variant === "image" ? alignClass : ""}`}
+      className={`${s.block} ${padClass} ${variantClass} ${isImageLeft ? alignClass : ""}`}
     >
-      <button className={s.options}>
+        {<button className={s.options} onClick={toggleEdit}>
         <IconOptions />
       </button>
 
-      {variant === "image" && imageSrc && (
+      {variant !== "text" && imageSrc && (
         <picture className={s.imageContainer}>
           <source srcSet={imageSrc} type="image/jpeg" />
           <img

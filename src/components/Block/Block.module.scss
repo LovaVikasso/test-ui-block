@@ -7,6 +7,7 @@
   gap: 8px;
   position: relative;
   box-shadow: 0 1px 8px 0 #0000001a;
+  flex-direction: row;
 
   &.singleLine {
     --padY: 24px;
@@ -30,6 +31,36 @@
     position: absolute;
     right: 16px;
     inset-block-end: var(--padY, 16px);
+  }
+}
+
+/* image variants */
+.imageLeft {
+  flex-direction: row;
+}
+
+.imageTop {
+  flex-direction: column;
+  align-items: stretch;
+  .imageContainer {
+    width: 100%;
+    flex: 0 0 auto;
+    aspect-ratio: 16 / 9;
+    border-radius: 17px;
+  }
+  .Indicator {
+    inset-block-end: 16px;
+  }
+}
+
+.imageBottom {
+  flex-direction: column-reverse;
+  align-items: stretch;
+  .imageContainer {
+    width: 100%;
+    flex: 0 0 auto;
+    aspect-ratio: 16 / 9;
+    border-radius: 17px;
   }
 }
 
@@ -86,4 +117,8 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  transition: all 0.25s ease-out;
+  &:hover {
+    backdrop-filter: blur(4.4px);
+  }
 }
