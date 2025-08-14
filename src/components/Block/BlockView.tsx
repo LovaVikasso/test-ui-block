@@ -1,7 +1,9 @@
 import React from "react";
+
 import type { BlockVariant } from "../../types";
 import { IconOptions } from "../Icons";
 import { Indicator } from "../Indicator";
+
 import s from "./Block.module.scss";
 
 type Props = {

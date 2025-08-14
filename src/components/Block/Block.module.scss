@@ -247,7 +247,7 @@
   max-width: 100%;
   border-radius: 25px;
   border: none;
-  overflow: hidden;
+  overflow: visible;
   min-height: 40px; // Минимальная высота контейнера
   display: flex; // Для правильного растягивания
 
@@ -261,6 +261,7 @@
     outline: none;
     padding-left: 5px;
     line-height: 1.4;
+    min-height: 40px;
 
     &::selection {
       background: #2bd1ff;
@@ -286,15 +287,19 @@
   white-space: normal;
   overflow-wrap: anywhere;
   word-break: break-word;
-  min-height: 16px;
-  padding: 0;
+  min-height: 40px;
+  padding: 16px;
   background: transparent;
   font-weight: 400;
   font-size: 14px;
   line-height: 140%;
-  letter-spacing:0;
+  letter-spacing: 0;
   vertical-align: middle;
-  color: #4B4B4B;
+  color: #4b4b4b;
+  resize: none;
+  overflow: hidden;
+  font-family: inherit;
+  box-sizing: border-box;
 
   &::selection {
     background: #2bd1ff;
@@ -305,14 +310,8 @@
     outline: none;
   }
 
-  &:empty::before {
-    content: attr(data-placeholder);
+  &::placeholder {
     color: #b7b7b7;
-    pointer-events: none;
-  }
-
-  &:empty:focus::before {
-    content: "";
   }
 }
 
@@ -347,8 +346,8 @@
     align-items: center;
 
     textarea {
-      padding: 0;
-      min-height: 16px;
+      padding: 16px 16px 16px 0;
+      min-height: 58px;
     }
 
     .contentEditable {
@@ -358,7 +357,7 @@
   }
 }
 
-.imageTopContent {
+.content .imageTopContent {
   display: flex;
   flex-direction: column;
   border-radius: 25px;
@@ -372,28 +371,30 @@
   .textArea {
     flex: 1;
     border-radius: 0;
-    min-height: 28px;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
 
     textarea {
-      padding: 0;
-      height: 36px;
+      padding: 16px;
+      min-height: 48px;
     }
 
     .contentEditable {
       padding: 16px;
-      min-height: 36px;
+      min-height: 48px;
     }
   }
 }
-.text {
+.content .text {
   .textArea {
     flex: 1;
     border-radius: 0;
     min-height: 72px;
   }
   textarea {
-    min-height: 16px;
-    padding: 0;
+    min-height: 72px;
+    padding: 16px;
   }
 
   .contentEditable {
@@ -401,7 +402,7 @@
     padding: 16px;
   }
 }
-.imageBottomContent {
+.content .imageBottomContent {
   display: flex;
   flex-direction: column;
   border-radius: 0 0 25px 25px;
@@ -415,15 +416,16 @@
   .textArea {
     flex: 1;
     border-radius: 0;
+    min-height: 48px;
 
     textarea {
-      padding: 0;
-      min-height: 16px;
+      padding: 16px;
+      min-height: 48px;
     }
 
     .contentEditable {
       padding: 16px;
-      min-height: 16px;
+      min-height: 48px;
     }
   }
 }

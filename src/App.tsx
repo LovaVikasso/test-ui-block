@@ -4,14 +4,14 @@ import s from "./App.module.scss";
 import "./assets/styles/reset.scss";
 import { Block } from "./components/Block";
 import { ActiveButton } from "./components/Indicator/ActiveButton.tsx";
-import type {BlockVariant} from "./types";
+import type { BlockVariant } from "./types";
 
 function App() {
   const [text, setText] = useState("Простой начальный текст");
   const [count] = useState(777);
   const [active, setActive] = useState(true);
-    const [type, setType] = useState<BlockVariant>("text");
-    const typeChangeHandler = (type: BlockVariant) => setType(type);
+  const [type, setType] = useState<BlockVariant>("text");
+  const typeChangeHandler = (type: BlockVariant) => setType(type);
   const toggleActive = () => setActive(!active);
   const handleTextAreaChange = (
     e: ChangeEvent<HTMLTextAreaElement> | React.FormEvent<HTMLDivElement>

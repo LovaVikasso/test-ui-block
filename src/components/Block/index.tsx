@@ -14,9 +14,7 @@ type Props = {
   imageSrc?: string;
   count?: number;
   activeIndicator?: boolean;
-  onTextChange?: (
-    e: React.ChangeEvent<HTMLTextAreaElement> | React.FormEvent<HTMLDivElement>
-  ) => void;
+  onTextChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 };
 
 export const Block = ({
@@ -75,9 +73,8 @@ export const Block = ({
     setEdit(false);
   };
 
-  const handleContentChange = (e: React.FormEvent<HTMLDivElement>) => {
-    const target = e.target as HTMLDivElement;
-    const newText = target.textContent || "";
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newText = e.target.value;
     setCurrentText(newText);
     setHasChanges(
       newText !== originalText || currentVariant !== originalVariant

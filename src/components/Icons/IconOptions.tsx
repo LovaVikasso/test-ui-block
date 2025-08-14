@@ -4,7 +4,7 @@ interface IconProps extends SVGProps<SVGSVGElement> {
   color?: string;
 }
 const SvgComponent = (
-    {  color = '#B4B4B4', ...props }: IconProps,
+  { color = "#B4B4B4", ...props }: IconProps,
   ref: Ref<SVGSVGElement>
 ) => (
   <svg
