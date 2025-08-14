@@ -1,6 +1,6 @@
 # Test UI Block
 
-Небольшая витрина компонентов на React + TypeScript (Vite) с вниманием к UX деталей: кастомное выделение текста в инпутах/текст-области, адаптивная верстка блока с индикатором количества, аккуратные стили и линтинг.
+Небольшая витрина компонентов на React + TypeScript (Vite) с вниманием к UX деталей
 
 ## Технологии
 
@@ -192,71 +192,6 @@ const { ref, lines } = useLineCount(text);
 - Основан на `getComputedStyle(line-height)` и `scrollHeight`.
 - Пересчет происходит при изменении `text`.
 
-## Стили и UX-детали
-
-- Подсветка выделенного текста в `input/textarea` реализована в `src/components/Input/Input.module.scss`:
-  - `::selection` (все браузеры)
-  - `::-moz-selection` (Firefox)
-  - Цвета по умолчанию: фон `#007aff`, текст `#fff`. Можно заменить на свои.
-- Для `TextArea` переиспользуются стили `Input.module.scss` — единый визуальный язык.
-- В `Indicator` предусмотрены классы для активного состояния и non-absolute варианта для кнопки.
-
-## Кастомизация
-
-- Изменить цвет выделения текста: правьте в `src/components/Input/Input.module.scss` правила `::selection`.
-- Переопределить размеры полей: селекторы `.input input, textarea` и `.input textarea` в том же файле.
-- Поменять алгоритм резерва под индикатор: переменные `base`, `perDigit`, `gap` в `components/Block/index.tsx`.
-- Ограничение индикатора `9999`: правится в `components/Indicator/index.tsx`.
-
-## Известные ограничения
-
-- Подсчет строк (`useLineCount`) зависит от реального рендера и `line-height`; при динамическом ресайзе контейнера без изменения текста может потребоваться расширить список зависимостей эффекта.
-- Для Radix-компонентов применяется проп-спрединг ради прозрачной прокидки нативных атрибутов — линтер помечает это как предупреждение (ожидаемо).
-- `TextArea.module.scss` сейчас пуст — стили берет из `Input.module.scss`.
-
-## Пример из `App.tsx`
-
-```tsx
-import { type ChangeEvent, useState } from 'react';
-import s from './App.module.scss';
-import './assets/styles/reset.scss';
-import { Block } from './components/Block';
-import { ActiveButton } from './components/Indicator/ActiveButton.tsx';
-import { Input } from './components/Input';
-import { TextArea } from './components/TextArea';
-
-function App() {
-  const [text, setText] = useState('Простой начальный текст');
-  const [count, setCount] = useState(1);
-  const [active, setActive] = useState(true);
-
-  return (
-    <div className={s.container}>
-      <div className={s.control}>
-        <Input label="Text" placeholder="Text" value={text} onChange={(e: ChangeEvent<HTMLInputElement>) => setText(e.currentTarget.value)} />
-      </div>
-      <div className={s.control}>
-        <Input label="Indicator" placeholder="Indicator" type="number" value={count} onChange={(e: ChangeEvent<HTMLInputElement>) => setCount(Number(e.currentTarget.value))} />
-        <ActiveButton active={active} toggle={() => setActive(!active)} />
-      </div>
-      <div className={s.control}>
-        <TextArea value={text} onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setText(e.currentTarget.value)} />
-      </div>
-      <div className={s.list}>
-        <Block text={text} count={count} activeIndicator={active} />
-      </div>
-    </div>
-  );
-}
-
-export default App;
-```
-
-## Разработка
-
-- Следите за порядком импортов — он автоматически проверяется и фиксируется (`import/order`).
-- Избегайте `any` — включены строгие правила TypeScript.
-- Перед коммитом рекомендуем: `npm run lint:fix && npm run format`.
 
 ## Лицензия
 
