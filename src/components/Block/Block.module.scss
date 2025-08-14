@@ -1,28 +1,45 @@
 .block {
   width: 345px;
+  border-radius: 25px;
+  position: relative;
+  box-shadow: 0 1px 8px 0 #0000001a;
+  overflow: hidden;
+}
+
+.view {
+  width: 100%;
+  height: 100%;
   padding-left: 16px;
   padding-right: 16px;
   border-radius: 25px;
   display: flex;
-  gap: 8px;
   position: relative;
-  box-shadow: 0 1px 8px 0 #0000001a;
-  flex-direction: row;
 
-  &.singleLine {
-    --padY: 24px;
-    padding-top: 24px;
-    padding-bottom: 24px;
+  // Отступы применяются только для text и image-left вариантов
+  &:not(.imageTop):not(.imageBottom) {
+    &.singleLine {
+      --padY: 24px;
+      padding-top: 24px;
+      padding-bottom: 24px;
+    }
+
+    &.multiLine {
+      --padY: 16px;
+      padding-top: 16px;
+      padding-bottom: 16px;
+    }
   }
-  &.multiLine {
-    --padY: 16px;
-    padding-top: 16px;
-    padding-bottom: 16px;
+
+  // Для image-top и image-bottom убираем все отступы
+  &.imageTop,
+  &.imageBottom {
+    padding: 0;
   }
 
   &.alignMiddle {
     align-items: center;
   }
+
   &.alignTop {
     align-items: flex-start;
   }
@@ -34,33 +51,61 @@
   }
 }
 
-/* image variants */
+/* image variants - применяются только к BlockView */
 .imageLeft {
   flex-direction: row;
+  gap: 8px;
 }
 
 .imageTop {
   flex-direction: column;
   align-items: stretch;
+
   .imageContainer {
     width: 100%;
     flex: 0 0 auto;
     aspect-ratio: 16 / 9;
-    border-radius: 17px;
+    border-radius: 0;
+    margin: 0;
   }
+
   .Indicator {
     inset-block-end: 16px;
+  }
+
+  .block__content {
+    padding: 16px 16px 16px 16px;
   }
 }
 
 .imageBottom {
   flex-direction: column-reverse;
   align-items: stretch;
+
   .imageContainer {
     width: 100%;
     flex: 0 0 auto;
     aspect-ratio: 16 / 9;
-    border-radius: 17px;
+    border-radius: 0;
+    margin: 0;
+  }
+
+  .block__content {
+    padding: 16px 16px 16px 16px;
+  }
+}
+
+/* Стили для режима редактирования - переопределяют flex-direction */
+.editMode {
+  flex-direction: column !important;
+
+  .content {
+    flex-direction: column;
+  }
+
+  // Убираем отступы от блока для image-left в режиме редактирования
+  &.imageLeft {
+    padding: 0;
   }
 }
 
@@ -71,7 +116,6 @@
   white-space: normal;
   overflow-wrap: anywhere;
   word-break: break-word;
-  hyphens: auto;
 
   &::after {
     content: "";
@@ -97,6 +141,7 @@
   align-items: center;
   justify-content: center;
 }
+
 .image {
   display: block;
   width: 100%;
@@ -118,7 +163,266 @@
   align-items: center;
   cursor: pointer;
   transition: all 0.25s ease-out;
+
   &:hover {
     backdrop-filter: blur(4.4px);
+  }
+  &.optionsImageTop {
+    backdrop-filter: blur(4.400000095367432px);
+    svg {
+      fill: #ffffff;
+    }
+  }
+}
+
+.editControl {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 17px 15px 6px 21px;
+}
+
+.contentControl {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.arrowControl {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  border-radius: 21px;
+  background-color: #dcdcdc;
+  transition: all 0.2s ease;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  &.arrowControlActive {
+    background-color: #2bd1ff;
+    color: white;
+  }
+}
+
+.content {
+  position: relative;
+  width: 100%;
+  border-radius: 25px;
+  background: linear-gradient(
+    230.09deg,
+    #2bd1ff -50.42%,
+    #34b8ff 33.26%,
+    #229cfd 113.78%
+  );
+  padding: 1px;
+  display: flex;
+  flex-direction: column;
+}
+
+.content::before {
+  content: "";
+  position: absolute;
+  inset: 1px; /* Отступ = толщине границы */
+  background: white; /* Цвет фона внутри (или transparent, если нужен прозрачный) */
+  border-radius: 24px; /* 25px - 1px (чтобы не было зазоров) */
+  z-index: 0;
+}
+
+/* Если внутри есть контент, он должен быть выше псевдоэлемента */
+.content > * {
+  position: relative;
+  z-index: 1;
+}
+
+.textArea {
+  max-width: 100%;
+  border-radius: 25px;
+  border: none;
+  overflow: hidden;
+  min-height: 40px; // Минимальная высота контейнера
+  display: flex; // Для правильного растягивания
+
+  textarea {
+    resize: none;
+    overflow: hidden;
+    width: 100%;
+    font-size: 14px;
+    font-family: inherit;
+    border: none;
+    outline: none;
+    padding-left: 5px;
+    line-height: 1.4;
+
+    &::selection {
+      background: #2bd1ff;
+      color: #fff;
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &::placeholder {
+      color: #b7b7b7;
+    }
+  }
+}
+
+.contentEditable {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  font-size: 14px;
+  font-family: inherit;
+  border: none;
+  outline: none;
+  line-height: 1.4;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  min-height: 16px;
+  padding: 0;
+  background: transparent;
+
+  &::selection {
+    background: #2bd1ff;
+    color: #fff;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:empty::before {
+    content: attr(data-placeholder);
+    color: #b7b7b7;
+    pointer-events: none;
+  }
+
+  &:empty:focus::before {
+    content: "";
+  }
+}
+
+.imagePlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f1f6fd;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.imageLeftContent {
+  display: flex;
+  align-items: flex-start;
+  border-radius: 25px 0 0 25px;
+
+  .imagePlaceholder {
+    margin: 16px;
+    padding: 8px;
+    height: 58px;
+    width: 58px;
+    border-radius: 12px;
+  }
+
+  .textArea {
+    flex: 1;
+    align-self: center;
+    border-radius: 0;
+    min-height: 58px;
+    display: flex;
+    align-items: center;
+
+    textarea {
+      padding: 0;
+      min-height: 16px;
+    }
+
+    .contentEditable {
+      min-height: 26px;
+      padding: 16px 16px 16px 0;
+    }
+  }
+}
+
+.imageTopContent {
+  display: flex;
+  flex-direction: column;
+  border-radius: 25px;
+  overflow: hidden;
+
+  .imagePlaceholder {
+    width: 100%;
+    height: 180px;
+    border-radius: 25px 25px 0 0;
+  }
+  .textArea {
+    padding: 0 0 0 14px;
+    flex: 1;
+    border-radius: 0;
+    margin-right: 16px;
+    min-height: 28px;
+    // Отступы применяются динамически через inline стили
+
+    textarea {
+      padding: 0;
+      height: 36px;
+    }
+
+    .contentEditable {
+      padding: 16px;
+      min-height: 36px;
+    }
+  }
+}
+.text {
+  .textArea {
+    flex: 1;
+    border-radius: 0;
+    min-height: 72px;
+  }
+  textarea {
+    min-height: 16px;
+    padding: 0;
+  }
+
+  .contentEditable {
+    min-height: 72px;
+    padding: 16px;
+  }
+}
+.imageBottomContent {
+  display: flex;
+  flex-direction: column;
+  border-radius: 0 0 25px 25px;
+
+  .imagePlaceholder {
+    width: 100%;
+    height: 180px;
+    border-radius: 0 0 25px 25px;
+  }
+
+  .textArea {
+    flex: 1;
+    border-radius: 0;
+
+    textarea {
+      padding: 0;
+      min-height: 16px;
+    }
+
+    .contentEditable {
+      padding: 16px;
+      min-height: 16px;
+    }
   }
 }

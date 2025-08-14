@@ -1,8 +1,12 @@
 import { forwardRef } from "react";
 import type { SVGProps, Ref } from "react";
+interface IconProps extends SVGProps<SVGSVGElement> {
+  size?: number;
+  color?: string;
+}
 const SvgComponent = (
-  props: SVGProps<SVGSVGElement>,
-  ref: Ref<SVGSVGElement>
+    { size = 12, color = '#9B9B9B', ...props }: IconProps,
+    ref: Ref<SVGSVGElement>,
 ) => (
   <svg
     width={12}

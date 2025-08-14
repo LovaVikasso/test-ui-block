@@ -1,7 +1,10 @@
 import { forwardRef } from "react";
 import type { SVGProps, Ref } from "react";
+interface IconProps extends SVGProps<SVGSVGElement> {
+  color?: string;
+}
 const SvgComponent = (
-  props: SVGProps<SVGSVGElement>,
+    {  color = '#B4B4B4', ...props }: IconProps,
   ref: Ref<SVGSVGElement>
 ) => (
   <svg
@@ -13,9 +16,9 @@ const SvgComponent = (
     ref={ref}
     {...props}
   >
-    <circle cx={2} cy={3.27271} r={2} fill="#B4B4B4" />
-    <circle cx={8} cy={3.27271} r={2} fill="#B4B4B4" />
-    <circle cx={14} cy={3.27271} r={2} fill="#B4B4B4" />
+    <circle cx={2} cy={3.27271} r={2} fill={color} />
+    <circle cx={8} cy={3.27271} r={2} fill={color} />
+    <circle cx={14} cy={3.27271} r={2} fill={color} />
   </svg>
 );
 const ForwardRef = forwardRef(SvgComponent);

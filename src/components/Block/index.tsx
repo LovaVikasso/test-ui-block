@@ -1,32 +1,80 @@
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import type { BlockVariant } from "../../types";
 import { useLineCount } from "../../utils/useLineCount";
-import { IconOptions } from "../Icons";
-import { Indicator } from "../Indicator";
 
 import s from "./Block.module.scss";
+import { BlockEdit } from "./BlockEdit";
+import { BlockView } from "./BlockView";
 
 type Props = {
   variant?: BlockVariant;
+  onVariantChange: (variant: BlockVariant) => void;
   text: string;
   imageSrc?: string;
   count?: number;
   activeIndicator?: boolean;
+  onTextChange?: (
+    e: React.ChangeEvent<HTMLTextAreaElement> | React.FormEvent<HTMLDivElement>
+  ) => void;
 };
 
 export const Block = ({
   variant = "text",
+  onVariantChange,
   text,
   imageSrc,
   count = 0,
   activeIndicator = false,
+  onTextChange,
 }: Props) => {
   const { ref, lines } = useLineCount(text);
   const contentRef = ref;
   const [edit, setEdit] = useState(false);
-  console.log(edit, "edit");
-  const toggleEdit = () => setEdit(!edit);
+  const [originalText, setOriginalText] = useState(text);
+  const [currentText, setCurrentText] = useState(text);
+  const [hasChanges, setHasChanges] = useState(false);
+
+  // Синхронизируем currentText при изменении text извне
+  useEffect(() => {
+    setCurrentText(text);
+  }, [text]);
+
+  const toggleEdit = () => {
+    if (edit) {
+      // Выход из режима редактирования
+      if (hasChanges) {
+        // Применяем изменения
+        if (onTextChange) {
+          const syntheticEvent = {
+            currentTarget: { value: currentText } as HTMLTextAreaElement,
+            target: { value: currentText } as HTMLTextAreaElement,
+          } as React.ChangeEvent<HTMLTextAreaElement>;
+          onTextChange(syntheticEvent);
+        }
+      }
+      setHasChanges(false);
+    } else {
+      // Вход в режим редактирования
+      setOriginalText(text);
+      setCurrentText(text);
+    }
+    setEdit(!edit);
+  };
+
+  const handleCancelEdit = () => {
+    setCurrentText(originalText);
+    setHasChanges(false);
+    setEdit(false);
+  };
+
+  const handleContentChange = (e: React.FormEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLDivElement;
+    const newText = target.textContent || "";
+    setCurrentText(newText);
+    setHasChanges(newText !== originalText);
+  };
+
   const indicatorReserve = useMemo(() => {
     if (!count) return 0;
     const digits = String(Math.abs(count)).length;
@@ -75,63 +123,32 @@ export const Block = ({
   }, [text, count, indicatorReserve, contentRef]);
 
   const effectiveLines = lines + (lines === 1 && needsBump ? 1 : 0);
-  const padClass = effectiveLines === 1 ? s.singleLine : s.multiLine;
-
-  const isImageLeft = variant === "image-left";
-  const alignClass =
-    isImageLeft && effectiveLines <= 2 ? s.alignMiddle : s.alignTop;
-
-  let variantClass = "";
-  switch (variant) {
-    case "image-left":
-      variantClass = s.imageLeft;
-      break;
-    case "image-top":
-      variantClass = s.imageTop;
-      break;
-    case "image-bottom":
-      variantClass = s.imageBottom;
-      break;
-    default:
-      variantClass = "";
-  }
 
   return (
-    <div
-      className={`${s.block} ${padClass} ${variantClass} ${isImageLeft ? alignClass : ""}`}
-    >
-        {<button className={s.options} onClick={toggleEdit}>
-        <IconOptions />
-      </button>
-
-      {variant !== "text" && imageSrc && (
-        <picture className={s.imageContainer}>
-          <source srcSet={imageSrc} type="image/jpeg" />
-          <img
-            src={imageSrc}
-            alt=""
-            className={s.image}
-            loading="lazy"
-            decoding="async"
-            width={60}
-            height={60}
-          />
-        </picture>
+    <div className={`${s.block} ${edit ? s.editMode : ""}`}>
+      {!edit ? (
+        <BlockView
+          variant={variant}
+          text={text}
+          imageSrc={imageSrc}
+          count={count}
+          activeIndicator={activeIndicator}
+          effectiveLines={effectiveLines}
+          indicatorReserve={indicatorReserve}
+          onToggleEdit={toggleEdit}
+          contentRef={contentRef}
+        />
+      ) : (
+        <BlockEdit
+          variant={variant}
+          text={currentText}
+          hasChanges={hasChanges}
+          onVariantChange={onVariantChange}
+          onTextChange={handleContentChange}
+          onToggleEdit={toggleEdit}
+          onCancelEdit={handleCancelEdit}
+        />
       )}
-
-      <div
-        ref={contentRef}
-        className={s.block__content}
-        style={{
-          ["--indicatorReserve" as string]: count
-            ? `${indicatorReserve}px`
-            : "0px",
-        }}
-      >
-        {text}
-      </div>
-
-      {count > 0 && <Indicator count={count} active={activeIndicator} />}
     </div>
   );
 };
