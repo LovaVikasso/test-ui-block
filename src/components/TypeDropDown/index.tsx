@@ -16,6 +16,7 @@ type Props = {
   variant?: BlockVariant;
   onChange?: (value: BlockVariant) => void;
 };
+
 export const TypeDropDown = ({ variant = "text", onChange }: Props) => {
   const iconMap: Record<BlockVariant, JSX.Element> = {
     text: <IconText />,
@@ -23,6 +24,7 @@ export const TypeDropDown = ({ variant = "text", onChange }: Props) => {
     "image-top": <IconImageTop />,
     "image-left": <IconImageLeft />,
   };
+
   return (
     <Popover.Root>
       <Popover.Trigger>
@@ -33,10 +35,12 @@ export const TypeDropDown = ({ variant = "text", onChange }: Props) => {
         </button>
       </Popover.Trigger>
       <Popover.Content
-        side="top" // открытие вверх
-        align="start" // выравнивание по левому краю
-        sideOffset={8} // отступ сверху
-        alignOffset={-170} // смещение влево
+        side="top"
+        align="start"
+        sideOffset={8}
+        alignOffset={-170}
+        avoidCollisions={true}
+        className={s.popoverContent}
       >
         <TypeControl variant={variant} onChange={onChange} />
       </Popover.Content>

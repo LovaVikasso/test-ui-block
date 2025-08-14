@@ -29,7 +29,6 @@ export const BlockView = ({
   onToggleEdit,
   contentRef,
 }: Props) => {
-  // Логика отступов и классов для режима просмотра
   const padClass = effectiveLines === 1 ? s.singleLine : s.multiLine;
   const isImageLeft = variant === "image-left";
   const alignClass =
