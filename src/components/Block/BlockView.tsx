@@ -44,7 +44,7 @@ export const BlockView = ({
   const alignClass =
     isImageLeft && effectiveLines <= 2 ? s.alignMiddle : s.alignTop;
 
-  let variantClass = "";
+  let variantClass: string;
   switch (variant) {
     case "image-left":
       variantClass = s.imageLeft;
@@ -115,7 +115,13 @@ export const BlockView = ({
         {text}
       </div>
 
-      {count > 0 && <Indicator count={count} active={activeIndicator} />}
+      {count > 0 && (
+        <Indicator
+          count={count}
+          active={activeIndicator}
+          focused={selected || focused}
+        />
+      )}
     </div>
   );
 };

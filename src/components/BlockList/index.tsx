@@ -12,6 +12,7 @@ type Props = {
 export const BlockList = ({ data }: Props) => {
   const [blocks, setBlocks] = useState<BlockData[]>(data);
   const [keyboardFocusedIndex, setKeyboardFocusedIndex] = useState<number>(-1);
+  const [editingBlockId, setEditingBlockId] = useState<number | null>(null);
 
   const handleTextChange = (
     id: number,
@@ -40,12 +41,35 @@ export const BlockList = ({ data }: Props) => {
   };
 
   const handleBlockHover = (id: number, isHovering: boolean) => {
-    setBlocks(prevBlocks =>
-      prevBlocks.map(block => ({
-        ...block,
-        focused: block.id === id ? isHovering : block.focused,
-      }))
-    );
+    if (editingBlockId !== null) return;
+    if (isHovering) {
+      const blockIndex = blocks.findIndex(block => block.id === id);
+      if (blockIndex !== -1) {
+        setKeyboardFocusedIndex(blockIndex);
+        setBlocks(prevBlocks =>
+          prevBlocks.map(block => ({
+            ...block,
+            focused: block.id === id,
+          }))
+        );
+      }
+    }
+  };
+
+  const handleEditModeChange = (id: number, isEditing: boolean) => {
+    if (isEditing) {
+      setEditingBlockId(id);
+      setBlocks(prevBlocks =>
+        prevBlocks.map(block => ({
+          ...block,
+          focused: false,
+          selected: false,
+        }))
+      );
+      setKeyboardFocusedIndex(-1);
+    } else {
+      setEditingBlockId(null);
+    }
   };
 
   const toggleBlockSelected = (blockId: number) => {
@@ -59,6 +83,8 @@ export const BlockList = ({ data }: Props) => {
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
+      if (editingBlockId !== null) return;
+
       if (blocks.length === 0) return;
 
       switch (e.key) {
@@ -106,22 +132,26 @@ export const BlockList = ({ data }: Props) => {
           break;
       }
     },
-    [blocks, keyboardFocusedIndex]
+    [blocks, keyboardFocusedIndex, editingBlockId]
   );
 
-  const handleClickOutside = useCallback((e: MouseEvent) => {
-    const target = e.target as Element;
-    if (!target.closest(`.${s.list}`)) {
-      setKeyboardFocusedIndex(-1);
-      // Снимаем фокус мыши со всех блоков
-      setBlocks(prevBlocks =>
-        prevBlocks.map(block => ({
-          ...block,
-          focused: false,
-        }))
-      );
-    }
-  }, []);
+  const handleClickOutside = useCallback(
+    (e: MouseEvent) => {
+      const target = e.target as Element;
+      if (!target.closest(`.${s.list}`)) {
+        if (editingBlockId === null) {
+          setKeyboardFocusedIndex(-1);
+          setBlocks(prevBlocks =>
+            prevBlocks.map(block => ({
+              ...block,
+              focused: false,
+            }))
+          );
+        }
+      }
+    },
+    [editingBlockId]
+  );
 
   useEffect(() => {
     document.addEventListener("keydown", handleKeyDown);
@@ -134,22 +164,28 @@ export const BlockList = ({ data }: Props) => {
   }, [handleKeyDown, handleClickOutside]);
 
   return (
-    <div className={s.list}>
+    <div
+      className={`${s.list} ${editingBlockId !== null ? s.editingMode : ""}`}
+    >
       {blocks.map((block, _index) => (
         <Block
           key={block.id}
           text={block.text}
           count={10}
           onTextChange={e => handleTextChange(block.id, e)}
-          activeIndicator={true}
+          activeIndicator={_index % 2 === 0} //для просмотра двух вариантов
           imageSrc={block.imageSrc}
           variant={block.variant}
           onVariantChange={variant => handleVariantChange(block.id, variant)}
           selected={block.selected}
           focused={block.focused}
+          isEditing={editingBlockId === block.id}
           onClick={() => handleBlockClick(block.id)}
           onMouseEnter={() => handleBlockHover(block.id, true)}
           onMouseLeave={() => handleBlockHover(block.id, false)}
+          onEditModeChange={isEditing =>
+            handleEditModeChange(block.id, isEditing)
+          }
         />
       ))}
     </div>

@@ -1,4 +1,4 @@
-import React, {type ChangeEvent, useEffect, useMemo, useState} from "react";
+import React, { type ChangeEvent, useEffect, useMemo, useState } from "react";
 
 import type { BlockVariant } from "../../types";
 import { useLineCount } from "../../utils/useLineCount";
@@ -16,10 +16,12 @@ type Props = {
   activeIndicator?: boolean;
   selected?: boolean;
   focused?: boolean;
+  isEditing?: boolean;
   onClick?: () => void;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
   onTextChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onEditModeChange?: (isEditing: boolean) => void;
 };
 
 export const Block = ({
@@ -31,14 +33,16 @@ export const Block = ({
   activeIndicator = false,
   selected = false,
   focused = false,
+  isEditing = false,
   onClick,
   onMouseEnter,
   onMouseLeave,
   onTextChange,
+  onEditModeChange,
 }: Props) => {
   const { ref, lines } = useLineCount(text);
   const contentRef = ref;
-  const [edit, setEdit] = useState(false);
+  const [edit, setEdit] = useState(isEditing);
   const [originalText, setOriginalText] = useState(text);
   const [originalVariant, setOriginalVariant] = useState(variant);
   const [currentText, setCurrentText] = useState(text);
@@ -49,6 +53,10 @@ export const Block = ({
     setCurrentText(text);
     setCurrentVariant(variant);
   }, [text, variant]);
+
+  useEffect(() => {
+    setEdit(isEditing);
+  }, [isEditing]);
 
   const toggleEdit = () => {
     if (edit) {
@@ -69,7 +77,10 @@ export const Block = ({
       setCurrentText(text);
       setCurrentVariant(variant);
     }
-    setEdit(!edit);
+
+    const newEditState = !edit;
+    setEdit(newEditState);
+    onEditModeChange?.(newEditState);
   };
 
   const handleCancelEdit = () => {
@@ -77,6 +88,7 @@ export const Block = ({
     setCurrentVariant(originalVariant);
     setHasChanges(false);
     setEdit(false);
+    onEditModeChange?.(false);
   };
 
   const handleContentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -144,7 +156,16 @@ export const Block = ({
   const effectiveLines = lines + (lines === 1 && needsBump ? 1 : 0);
 
   return (
-    <div className={`${s.block} ${edit ? s.editMode : ""}`}>
+    <div
+      className={[
+        s.block,
+        edit ? s.editMode : "",
+        selected ? s.selected : "",
+        focused ? s.focused : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
       {!edit ? (
         <BlockView
           variant={variant}

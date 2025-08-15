@@ -2,4 +2,23 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+
+  &.editingMode {
+    // В режиме редактирования отключаем hover эффекты
+    .block {
+      &:hover {
+        border: 1px solid transparent !important;
+        background: white !important;
+        box-shadow: 0 1px 8px 0 #0000001a !important;
+      }
+
+      &.selected:hover {
+        background-color: var(
+          --Dedicated-light-block-color,
+          #f1f6fd
+        ) !important;
+        box-shadow: 0 1px 5.3px 0 #149dff36 !important;
+      }
+    }
+  }
 }
