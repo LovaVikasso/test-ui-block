@@ -16,6 +16,11 @@ type Props = {
   indicatorReserve: number;
   onToggleEdit: () => void;
   contentRef: React.RefObject<HTMLDivElement | null>;
+  selected?: boolean;
+  focused?: boolean;
+  onClick?: () => void;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 };
 
 export const BlockView = ({
@@ -28,6 +33,11 @@ export const BlockView = ({
   indicatorReserve,
   onToggleEdit,
   contentRef,
+  selected = false,
+  focused = false,
+  onClick,
+  onMouseEnter,
+  onMouseLeave,
 }: Props) => {
   const padClass = effectiveLines === 1 ? s.singleLine : s.multiLine;
   const isImageLeft = variant === "image-left";
@@ -51,7 +61,19 @@ export const BlockView = ({
 
   return (
     <div
-      className={`${s.view} ${padClass} ${variantClass} ${isImageLeft ? alignClass : ""}`}
+      className={[
+        s.view,
+        padClass,
+        variantClass,
+        isImageLeft && alignClass,
+        selected && s.selected,
+        focused && s.focused,
+      ]
+        .filter(Boolean)
+        .join(" ")}
+      onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
     >
       <button
         className={`${s.options} ${variant === "image-top" ? s.optionsImageTop : ""}`}

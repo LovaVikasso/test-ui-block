@@ -4,17 +4,23 @@
   position: relative;
   box-shadow: 0 1px 8px 0 #0000001a;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .view {
+  --r: 25px; // радиус
+  --bw: 1px; // толщина "бордера"
   width: 100%;
   height: 100%;
   min-height: 68px;
   padding-left: 16px;
   padding-right: 16px;
-  border-radius: 25px;
+  border-radius: var(--r);
   display: flex;
   position: relative;
+  transition: all 0.3s ease-in-out;
+  border: var(--bw) solid transparent;
+  box-sizing: border-box;
 
   &:not(.imageTop):not(.imageBottom) {
     &.singleLine {
@@ -30,9 +36,49 @@
     }
   }
 
+  &.selected {
+    background-color: var(--Dedicated-light-block-color, #f1f6fd);
+    box-shadow: 0 1px 5.3px 0 #149dff36;
+  }
+
+  &:hover:not(.selected),
+  &.focused:not(.selected) {
+    border: var(--bw) solid transparent;
+    background:
+      linear-gradient(white, white) padding-box,
+      linear-gradient(
+          230.09deg,
+          #2bd1ff -50.42%,
+          #34b8ff 33.26%,
+          #229cfd 113.78%
+        )
+        border-box;
+    box-shadow: 0 1px 5.3px 0 #149dff36;
+  }
+
+  &.selected:hover,
+  &.selected.focused {
+    border: var(--bw) solid transparent;
+    background:
+      linear-gradient(
+          var(--Dedicated-light-block-color, #f1f6fd),
+          var(--Dedicated-light-block-color, #f1f6fd)
+        )
+        padding-box,
+      linear-gradient(
+          230.09deg,
+          #2bd1ff -50.42%,
+          #34b8ff 33.26%,
+          #229cfd 113.78%
+        )
+        border-box;
+    box-shadow: 0 1px 5.3px 0 #149dff36;
+  }
+
   &.imageTop,
   &.imageBottom {
     padding: 0;
+    overflow: hidden;
   }
 
   &.alignMiddle {
@@ -48,6 +94,28 @@
     right: 16px;
     inset-block-end: var(--padY, 16px);
   }
+}
+
+/* Верхняя картинка: уменьшаем верхние углы внутренних контейнеров */
+.content .imageTopContent {
+  border-radius: calc(var(--r) - var(--bw));
+}
+.content .imageTopContent .imagePlaceholder {
+  border-top-left-radius: calc(var(--r) - var(--bw));
+  border-top-right-radius: calc(var(--r) - var(--bw));
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* Нижняя картинка: уменьшаем нижние углы внутренних контейнеров */
+.content .imageBottomContent {
+  border-radius: 0 0 calc(var(--r) - var(--bw)) calc(var(--r) - var(--bw));
+}
+.content .imageBottomContent .imagePlaceholder {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: calc(var(--r) - var(--bw));
+  border-bottom-right-radius: calc(var(--r) - var(--bw));
 }
 
 .imageLeft {
@@ -72,7 +140,7 @@
   }
 
   .block__content {
-    padding: 16px 16px 16px 16px;
+    padding: 16px;
   }
 }
 
@@ -89,7 +157,7 @@
   }
 
   .block__content {
-    padding: 16px 16px 16px 16px;
+    padding: 16px;
   }
 }
 
@@ -108,7 +176,6 @@
 .block__content {
   flex: 1;
   min-width: 0;
-
   white-space: normal;
   overflow-wrap: anywhere;
   word-break: break-word;
@@ -162,8 +229,10 @@
   &:hover {
     backdrop-filter: blur(4.4px);
   }
+
   &.optionsImageTop {
-    backdrop-filter: blur(4.400000095367432px);
+    backdrop-filter: blur(4.4px);
+
     svg {
       fill: #ffffff;
     }
@@ -350,6 +419,7 @@
     height: 180px;
     border-radius: 25px 25px 0 0;
   }
+
   .textArea {
     flex: 1;
     border-radius: 0;
@@ -368,6 +438,7 @@
     }
   }
 }
+
 .content .text {
   .textArea {
     flex: 1;
@@ -375,6 +446,7 @@
     min-height: 72px;
     align-content: center;
   }
+
   textarea {
     min-height: 72px;
     padding: 16px;
@@ -385,6 +457,7 @@
     padding: 16px;
   }
 }
+
 .content .imageBottomContent {
   display: flex;
   flex-direction: column;
@@ -412,6 +485,7 @@
     }
   }
 }
+
 .edit {
   gap: 2px;
 }

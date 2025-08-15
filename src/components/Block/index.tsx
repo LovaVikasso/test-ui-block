@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, {type ChangeEvent, useEffect, useMemo, useState} from "react";
 
 import type { BlockVariant } from "../../types";
 import { useLineCount } from "../../utils/useLineCount";
@@ -14,6 +14,11 @@ type Props = {
   imageSrc?: string;
   count?: number;
   activeIndicator?: boolean;
+  selected?: boolean;
+  focused?: boolean;
+  onClick?: () => void;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
   onTextChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 };
 
@@ -24,6 +29,11 @@ export const Block = ({
   imageSrc,
   count = 0,
   activeIndicator = false,
+  selected = false,
+  focused = false,
+  onClick,
+  onMouseEnter,
+  onMouseLeave,
   onTextChange,
 }: Props) => {
   const { ref, lines } = useLineCount(text);
@@ -35,7 +45,6 @@ export const Block = ({
   const [currentVariant, setCurrentVariant] = useState(variant);
   const [hasChanges, setHasChanges] = useState(false);
 
-  // Синхронизируем currentText и currentVariant при изменении извне
   useEffect(() => {
     setCurrentText(text);
     setCurrentVariant(variant);
@@ -43,21 +52,18 @@ export const Block = ({
 
   const toggleEdit = () => {
     if (edit) {
-      // Выход из режима редактирования
       if (hasChanges) {
-        // Применяем изменения
         if (onTextChange) {
           const syntheticEvent = {
             currentTarget: { value: currentText } as HTMLTextAreaElement,
             target: { value: currentText } as HTMLTextAreaElement,
-          } as React.ChangeEvent<HTMLTextAreaElement>;
+          } as ChangeEvent<HTMLTextAreaElement>;
           onTextChange(syntheticEvent);
         }
         onVariantChange(currentVariant);
       }
       setHasChanges(false);
     } else {
-      // Вход в режим редактирования
       setOriginalText(text);
       setOriginalVariant(variant);
       setCurrentText(text);
@@ -73,7 +79,7 @@ export const Block = ({
     setEdit(false);
   };
 
-  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleContentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const newText = e.target.value;
     setCurrentText(newText);
     setHasChanges(
@@ -150,6 +156,11 @@ export const Block = ({
           indicatorReserve={indicatorReserve}
           onToggleEdit={toggleEdit}
           contentRef={contentRef}
+          selected={selected}
+          focused={focused}
+          onClick={onClick}
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
         />
       ) : (
         <BlockEdit
