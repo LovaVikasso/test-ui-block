@@ -16,7 +16,6 @@
   display: flex;
   position: relative;
 
-  // Отступы применяются только для text и image-left вариантов
   &:not(.imageTop):not(.imageBottom) {
     &.singleLine {
       --padY: 24px;
@@ -31,7 +30,6 @@
     }
   }
 
-  // Для image-top и image-bottom убираем все отступы
   &.imageTop,
   &.imageBottom {
     padding: 0;
@@ -52,7 +50,6 @@
   }
 }
 
-/* image variants - применяются только к BlockView */
 .imageLeft {
   flex-direction: row;
   gap: 8px;
@@ -96,7 +93,6 @@
   }
 }
 
-/* Стили для режима редактирования - переопределяют flex-direction */
 .editMode {
   flex-direction: column !important;
 
@@ -104,7 +100,6 @@
     flex-direction: column;
   }
 
-  // Убираем отступы от блока для image-left в режиме редактирования
   &.imageLeft {
     padding: 0;
   }
@@ -156,7 +151,6 @@
   top: 0;
   height: 26px;
   width: 28px;
-  //backdrop-filter: blur(4.4px);
   border: none;
   border-radius: 14px;
   display: flex;
@@ -218,22 +212,14 @@
   width: 100%;
   border-radius: 25px;
   border: 1px solid transparent;
-  background: linear-gradient(white, white) padding-box,
-  linear-gradient(230.09deg, #2bd1ff -50.42%, #34b8ff 33.26%, #229cfd 113.78%) border-box;
+  background:
+    linear-gradient(white, white) padding-box,
+    linear-gradient(230.09deg, #2bd1ff -50.42%, #34b8ff 33.26%, #229cfd 113.78%)
+      border-box;
   display: flex;
   flex-direction: column;
 }
 
-//.content::before {
-//  content: "";
-//  position: absolute;
-//  inset: 1px; /* Отступ = толщине границы */
-//  background: white; /* Цвет фона внутри (или transparent, если нужен прозрачный) */
-//  border-radius: 24px; /* 25px - 1px (чтобы не было зазоров) */
-//  z-index: 0;
-//}
-
-/* Если внутри есть контент, он должен быть выше псевдоэлемента */
 .content > * {
   position: relative;
   z-index: 1;
@@ -244,8 +230,8 @@
   border-radius: 25px;
   border: none;
   overflow: visible;
-  min-height: 40px; // Минимальная высота контейнера
-  display: flex; // Для правильного растягивания
+  min-height: 40px;
+  display: flex;
 
   textarea {
     resize: none;
@@ -387,6 +373,7 @@
     flex: 1;
     border-radius: 0;
     min-height: 72px;
+    align-content: center;
   }
   textarea {
     min-height: 72px;
