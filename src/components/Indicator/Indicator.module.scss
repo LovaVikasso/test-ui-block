@@ -3,7 +3,7 @@
   bottom: 11px;
   right: 13px;
 
-  min-width: 22px;
+  min-width: 30px;
   height: 22px;
   padding: 0 6px;
   border-radius: 30px;
@@ -23,11 +23,29 @@
     box-shadow: 0 1px 5.3px 0 #149dff36;
     color: #ffffff;
     border: none;
+
+    &.selected {
+      background: #F1F6FD;
+    }
+  }
+
+  &.imageBottom {
+    background: #3F3F3F66;
+    backdrop-filter: blur(9px);
+    color: #FFFFFF;
+    border: none;
   }
 
   &.focused {
     border: 0.5px solid #34b8ff;
     color: #34b8ff;
+    background-color: #ffffff;
+  }
+
+  &.focusedSelected {
+    border: 0.5px solid #34b8ff;
+    color: #34b8ff;
+    background-color: #F1F6FD;
   }
 }
 

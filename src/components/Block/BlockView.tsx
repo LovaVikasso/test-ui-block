@@ -41,6 +41,8 @@ export const BlockView = ({
 }: Props) => {
   const padClass = effectiveLines === 1 ? s.singleLine : s.multiLine;
   const isImageLeft = variant === "image-left";
+  const isImageTopOrBottom =
+    variant === "image-top" || variant === "image-bottom";
   const alignClass =
     isImageLeft && effectiveLines <= 2 ? s.alignMiddle : s.alignTop;
 
@@ -58,6 +60,24 @@ export const BlockView = ({
     default:
       variantClass = "";
   }
+
+  // Определяем стили для контента
+  const contentStyle = {
+    // Для вариантов с картинками сверху/снизу - фиксированные отступы 16px
+    ...(isImageTopOrBottom
+      ? {
+          paddingTop: "16px",
+          paddingBottom: "16px",
+        }
+      : {}),
+
+    // IndicatorReserve только для нескольких строк и не для text варианта
+    ...(effectiveLines > 1 && count && variant !== "text"
+      ? {
+          ["--indicatorReserve" as string]: `${indicatorReserve}px`,
+        }
+      : {}),
+  };
 
   return (
     <div
@@ -83,7 +103,9 @@ export const BlockView = ({
       </button>
 
       {variant !== "text" && imageSrc && (
-        <picture className={s.imageContainer}>
+        <picture
+          className={`${s.imageContainer} ${focused ? s.focusedImage : ""}`}
+        >
           <source srcSet={imageSrc} type="image/jpeg" />
           <img
             src={imageSrc}
@@ -97,21 +119,7 @@ export const BlockView = ({
         </picture>
       )}
 
-      <div
-        ref={contentRef}
-        className={s.block__content}
-        style={{
-          ["--indicatorReserve" as string]: count
-            ? `${indicatorReserve}px`
-            : "0px",
-          ...(variant === "image-top" || variant === "image-bottom"
-            ? {
-                paddingTop: effectiveLines === 1 ? "24px" : "16px",
-                paddingBottom: effectiveLines === 1 ? "24px" : "16px",
-              }
-            : {}),
-        }}
-      >
+      <div ref={contentRef} className={s.block__content} style={contentStyle}>
         {text}
       </div>
 
@@ -119,7 +127,9 @@ export const BlockView = ({
         <Indicator
           count={count}
           active={activeIndicator}
-          focused={selected || focused}
+          focused={focused}
+          selected={selected}
+          variant={variant}
         />
       )}
     </div>

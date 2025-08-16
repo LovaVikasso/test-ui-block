@@ -43,34 +43,29 @@
 
   &.focused:not(.selected) {
     border: var(--bw) solid transparent;
-    background:
-      linear-gradient(white, white) padding-box,
-      linear-gradient(
-          230.09deg,
-          #2bd1ff -50.42%,
-          #34b8ff 33.26%,
-          #229cfd 113.78%
-        )
-        border-box;
+    background: linear-gradient(white, white) padding-box,
+    linear-gradient(
+                    230.09deg,
+                    #2bd1ff -50.42%,
+                    #34b8ff 33.26%,
+                    #229cfd 113.78%
+    ) border-box;
     box-shadow: 0 1px 5.3px 0 #149dff36;
   }
 
   &.selected:hover,
   &.selected.focused {
     border: var(--bw) solid transparent;
-    background:
-      linear-gradient(
-          var(--Dedicated-light-block-color, #f1f6fd),
-          var(--Dedicated-light-block-color, #f1f6fd)
-        )
-        padding-box,
-      linear-gradient(
-          230.09deg,
-          #2bd1ff -50.42%,
-          #34b8ff 33.26%,
-          #229cfd 113.78%
-        )
-        border-box;
+    background: linear-gradient(
+                    var(--Dedicated-light-block-color, #f1f6fd),
+                    var(--Dedicated-light-block-color, #f1f6fd)
+    ) padding-box,
+    linear-gradient(
+                    230.09deg,
+                    #2bd1ff -50.42%,
+                    #34b8ff 33.26%,
+                    #229cfd 113.78%
+    ) border-box;
     box-shadow: 0 1px 5.3px 0 #149dff36;
   }
 
@@ -98,6 +93,7 @@
 .content .imageTopContent {
   border-radius: calc(var(--r) - var(--bw));
 }
+
 .content .imageTopContent .imagePlaceholder {
   border-radius: calc(var(--r) - var(--bw)) calc(var(--r) - var(--bw)) 0 0;
 }
@@ -105,6 +101,7 @@
 .content .imageBottomContent {
   border-radius: 0 0 calc(var(--r) - var(--bw)) calc(var(--r) - var(--bw));
 }
+
 .content .imageBottomContent .imagePlaceholder {
   border-radius: 0 0 calc(var(--r) - var(--bw)) calc(var(--r) - var(--bw));
 }
@@ -122,8 +119,11 @@
     width: 100%;
     flex: 0 0 auto;
     aspect-ratio: 16 / 9;
-    border-radius: 0;
+    border-radius: 25px 25px 5px 5px;
     margin: 0;
+    &.focusedImage {
+      border: 1px solid white;
+    }
   }
 
   .Indicator {
@@ -143,8 +143,11 @@
     width: 100%;
     flex: 0 0 auto;
     aspect-ratio: 16 / 9;
-    border-radius: 0;
+    border-radius: 5px 5px 25px 25px;
     margin: 0;
+    &.focusedImage {
+      border: 1px solid white;
+    }
   }
 
   .block__content {
@@ -230,7 +233,10 @@
   }
 
   &.optionsImageTop {
+    background-color: #8585854D;
     backdrop-filter: blur(4.4px);
+    right: 12px;
+    top: 14px;
 
     svg {
       fill: #ffffff;
@@ -270,7 +276,7 @@
   }
 
   &.arrowControlActive {
-    background-color: #2bd1ff;
+    background: linear-gradient(230.09deg, #2BD1FF -50.42%, #34B8FF 33.26%, #229CFD 113.78%);
     color: white;
   }
 }
@@ -280,10 +286,8 @@
   width: 100%;
   border-radius: 25px;
   border: 1px solid transparent;
-  background:
-    linear-gradient(white, white) padding-box,
-    linear-gradient(230.09deg, #2bd1ff -50.42%, #34b8ff 33.26%, #229cfd 113.78%)
-      border-box;
+  background: linear-gradient(white, white) padding-box,
+  linear-gradient(230.09deg, #2bd1ff -50.42%, #34b8ff 33.26%, #229cfd 113.78%) border-box;
   display: flex;
   flex-direction: column;
 }
@@ -417,6 +421,10 @@
     width: 100%;
     height: 180px;
     border-radius: 25px 25px 0 0;
+
+    img {
+      max-height: 180px;
+    }
   }
 
   .textArea {
@@ -449,6 +457,7 @@
   textarea {
     min-height: 72px;
     padding: 16px;
+    align-content: center;
   }
 
   .contentEditable {
@@ -463,9 +472,12 @@
   border-radius: 0 0 25px 25px;
 
   .imagePlaceholder {
-    width: 100%;
-    height: 180px;
+    //width: 100%;
     border-radius: 0 0 25px 25px;
+
+    img {
+      max-height: 180px;
+    }
   }
 
   .textArea {
