@@ -1,4 +1,10 @@
-import React, { type ChangeEvent, useEffect, useMemo, useState } from "react";
+import React, {
+  type ChangeEvent,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 
 import type { BlockVariant } from "../../types";
 import { useLineCount } from "../../utils/useLineCount";
@@ -40,8 +46,18 @@ export const Block = ({
   onTextChange,
   onEditModeChange,
 }: Props) => {
-  const { ref, lines } = useLineCount(text);
-  const contentRef = ref;
+  const indicatorRef = useRef<HTMLDivElement>(null);
+  const [indicatorWidth, setIndicatorWidth] = useState(0);
+
+  useLayoutEffect(() => {
+    if (indicatorRef.current && count > 0) {
+      setIndicatorWidth(indicatorRef.current.offsetWidth);
+    } else {
+      setIndicatorWidth(0);
+    }
+  }, [count]);
+
+  const { ref: contentRef, lines, bumped } = useLineCount(text, indicatorWidth);
   const [edit, setEdit] = useState(isEditing);
   const [originalText, setOriginalText] = useState(text);
   const [originalVariant, setOriginalVariant] = useState(variant);
@@ -59,25 +75,22 @@ export const Block = ({
   }, [isEditing]);
 
   const toggleEdit = () => {
-    if (edit) {
-      if (hasChanges) {
-        if (onTextChange) {
-          const syntheticEvent = {
-            currentTarget: { value: currentText } as HTMLTextAreaElement,
-            target: { value: currentText } as HTMLTextAreaElement,
-          } as ChangeEvent<HTMLTextAreaElement>;
-          onTextChange(syntheticEvent);
-        }
-        onVariantChange(currentVariant);
+    if (edit && hasChanges) {
+      if (onTextChange) {
+        const syntheticEvent = {
+          currentTarget: { value: currentText } as HTMLTextAreaElement,
+          target: { value: currentText } as HTMLTextAreaElement,
+        } as ChangeEvent<HTMLTextAreaElement>;
+        onTextChange(syntheticEvent);
       }
+      onVariantChange(currentVariant);
       setHasChanges(false);
-    } else {
+    } else if (!edit) {
       setOriginalText(text);
       setOriginalVariant(variant);
       setCurrentText(text);
       setCurrentVariant(variant);
     }
-
     const newEditState = !edit;
     setEdit(newEditState);
     onEditModeChange?.(newEditState);
@@ -106,54 +119,9 @@ export const Block = ({
     );
   };
 
-  const indicatorReserve = useMemo(() => {
-    if (!count) return 0;
-    const digits = String(Math.abs(count)).length;
-    const base = 18;
-    const perDigit = 6;
-    const gap = 8;
-    return base + perDigit * digits + gap;
-  }, [count]);
+  const indicatorReserve = indicatorWidth;
 
-  const [needsBump, setNeedsBump] = useState(false);
-
-  useEffect(() => {
-    if (!contentRef.current) return;
-    if (!count) {
-      setNeedsBump(false);
-      return;
-    }
-
-    const el = contentRef.current;
-
-    const getLastLineRect = (): DOMRect | null => {
-      let lastNode: Node | null = el.lastChild;
-      while (lastNode && lastNode.nodeType !== Node.TEXT_NODE) {
-        lastNode = (lastNode as Element).lastChild;
-      }
-      if (!lastNode) return null;
-      const range = document.createRange();
-      range.selectNodeContents(lastNode);
-      const rects = range.getClientRects();
-      return rects.length ? rects[rects.length - 1] : null;
-    };
-
-    const id = requestAnimationFrame(() => {
-      const lastRect = getLastLineRect();
-      const contentRect = el.getBoundingClientRect();
-      if (!lastRect) {
-        setNeedsBump(false);
-        return;
-      }
-
-      const fits = lastRect.right + indicatorReserve <= contentRect.right;
-      setNeedsBump(!fits);
-    });
-
-    return () => cancelAnimationFrame(id);
-  }, [text, count, indicatorReserve, contentRef]);
-
-  const effectiveLines = lines + (lines === 1 && needsBump ? 1 : 0);
+  const effectiveLines = lines + (bumped ? 1 : 0);
 
   return (
     <div
@@ -177,11 +145,13 @@ export const Block = ({
           indicatorReserve={indicatorReserve}
           onToggleEdit={toggleEdit}
           contentRef={contentRef}
+          indicatorRef={indicatorRef}
           selected={selected}
           focused={focused}
           onClick={onClick}
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
+          bumped={bumped}
         />
       ) : (
         <BlockEdit

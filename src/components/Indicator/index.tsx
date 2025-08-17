@@ -1,8 +1,11 @@
+import { type RefObject } from "react";
+
 import type { BlockVariant } from "../../types";
 
 import s from "./Indicator.module.scss";
 
 type Props = {
+  ref: RefObject<HTMLDivElement | null>;
   count?: number;
   active?: boolean;
   focused?: boolean;
@@ -11,6 +14,7 @@ type Props = {
 };
 
 export const Indicator = ({
+  ref,
   count = 0,
   active = false,
   focused = false,
@@ -22,6 +26,7 @@ export const Indicator = ({
   const showFocusedSelected = focused && selected && !isImageBottom && !active;
   return (
     <div
+      ref={ref}
       className={`${s.indicator} 
       ${active ? s.active : ""}
       ${selected && !active ? s.selected : ""}

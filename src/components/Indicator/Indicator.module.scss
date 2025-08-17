@@ -17,6 +17,11 @@
   color: #b4b4b4;
   border: 0.5px solid #b4b4b4;
   background: transparent;
+  transition: color 0.2s ease-in-out,
+  background 0.2s ease-in-out,
+  border 0.2s ease-in-out,
+  box-shadow 0.2s ease-in-out;
+
 
   &.active {
     background: linear-gradient(239.93deg, #3fccff -26.89%, #068dfb 70.78%);

@@ -116,12 +116,14 @@
   align-items: stretch;
 
   .imageContainer {
+    box-sizing: border-box;
     width: 100%;
     flex: 0 0 auto;
     aspect-ratio: 16 / 9;
     border-radius: 25px 25px 5px 5px;
     margin: 0;
-      height: 181px;
+    height: 181px;
+    transition: all 0.3s ease-in-out;
 
     &.focusedImage {
       border: 1px solid white;
@@ -142,13 +144,14 @@
   align-items: stretch;
 
   .imageContainer {
+    box-sizing: border-box;
     width: 100%;
     flex: 0 0 auto;
     aspect-ratio: 16 / 9;
     border-radius: 5px 5px 25px 25px;
     margin: 0;
-      height: 181px;
-
+    height: 181px;
+    transition:  all 0.3s ease-in-out;
     &.focusedImage {
       border: 1px solid white;
     }
@@ -189,9 +192,10 @@
   &::after {
     content: "";
     display: inline-block;
-    inline-size: var(--indicatorReserve, 0px);
-    block-size: 1lh;
-    height: 0;
+    width: var(--indicatorReserve, 0px);
+    height: 1em; // <-- реальная высота строки
+    vertical-align: bottom;
+    visibility: hidden; // невидимый, но создаёт место для индикатора
   }
 }
 

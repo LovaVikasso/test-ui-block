@@ -1,4 +1,4 @@
-import React from "react";
+import React, { type RefObject } from "react";
 
 import type { BlockVariant } from "../../types";
 import { IconOptions } from "../Icons";
@@ -16,11 +16,13 @@ type Props = {
   indicatorReserve: number;
   onToggleEdit: () => void;
   contentRef: React.RefObject<HTMLDivElement | null>;
+  indicatorRef: RefObject<HTMLDivElement | null>;
   selected?: boolean;
   focused?: boolean;
   onClick?: () => void;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
+  bumped: boolean;
 };
 
 export const BlockView = ({
@@ -33,11 +35,13 @@ export const BlockView = ({
   indicatorReserve,
   onToggleEdit,
   contentRef,
+  indicatorRef,
   selected = false,
   focused = false,
   onClick,
   onMouseEnter,
   onMouseLeave,
+  bumped,
 }: Props) => {
   const padClass = effectiveLines === 1 ? s.singleLine : s.multiLine;
   const isImageLeft = variant === "image-left";
@@ -60,21 +64,19 @@ export const BlockView = ({
     default:
       variantClass = "";
   }
-
-  // Определяем стили для контента
   const contentStyle = {
-    // Для вариантов с картинками сверху/снизу - фиксированные отступы 16px
     ...(isImageTopOrBottom
       ? {
           paddingTop: "16px",
           paddingBottom: "16px",
         }
       : {}),
-
-    // IndicatorReserve только для нескольких строк и не для text варианта
     ...(effectiveLines > 1 && count && variant !== "text"
       ? {
-          ["--indicatorReserve" as string]: `${indicatorReserve}px`,
+          ["--indicatorReserve" as string]: bumped
+            ? `${indicatorReserve}px`
+            : "0px",
+          ["--bumpedHeight" as string]: bumped ? "1em" : "0",
         }
       : {}),
   };
@@ -125,6 +127,7 @@ export const BlockView = ({
 
       {count > 0 && (
         <Indicator
+          ref={indicatorRef}
           count={count}
           active={activeIndicator}
           focused={focused}
