@@ -1,7 +1,6 @@
 # Test UI Block
 
-Небольшая витрина компонентов на React + TypeScript (Vite) с вниманием к UX деталей
-
+Небольшая витрина компонентов на React + TypeScript (Vite) 
 ## Технологии
 
 - React 19 + TypeScript 5
