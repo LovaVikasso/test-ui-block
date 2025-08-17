@@ -24,9 +24,9 @@ export const Indicator = ({
     <div
       className={`${s.indicator} 
       ${active ? s.active : ""}
-      ${selected ? s.selected : ""}
+      ${selected && !active ? s.selected : ""}
       ${isImageBottom ? s.imageBottom : ""}
-      ${focused && !active ? s.focused : ""}
+      ${focused && !active ? s.focused : ""} 
       ${showFocusedSelected ? s.focusedSelected : ""}`}
     >
       {active && "+"}
